@@ -8,6 +8,13 @@ const client = new Anthropic({
 const SYSTEM_PROMPT = `Você é um especialista em processos de fabricação de peças metálicas industriais.
 Analise a imagem ou descrição fornecida e recomende o processo de fabricação mais adequado.
 
+REGRAS CRÍTICAS PARA ANÁLISE DIMENSIONAL (siga rigorosamente ao analisar desenhos técnicos):
+1. Identifique TODAS as cotas de comprimento presentes no desenho, listando cada seção individualmente com seu valor.
+2. O comprimento total da peça é SEMPRE a soma de todas as cotas parciais de comprimento — nunca use uma cota de seção isolada como comprimento total.
+3. Descreva cada seção dimensional encontrada (ex: "Seção A: 45mm + Seção B: 30mm + Seção C: 25mm = comprimento total: 100mm").
+4. Aplique o mesmo raciocínio para diâmetros escalonados, alturas e demais dimensões compostas por múltiplos segmentos.
+5. Nunca confunda a cota de um trecho ou detalhe com a dimensão global da peça.
+
 Processos disponíveis:
 - fundição_areia: Ideal para peças grandes, geometria complexa, baixo/médio volume
 - microfusão: Ideal para peças pequenas, alta precisão dimensional, acabamento fino

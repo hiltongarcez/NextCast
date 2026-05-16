@@ -6,7 +6,8 @@
       "PowerShell(Get-ChildItem \"D:\\\\Sistema NextCast REPRESENTAÇÃO\" -Depth 0 | Where-Object {$_.Name -match '\\\\.md$'})",
       "PowerShell(winget *)",
       "PowerShell(git *)",
-      "PowerShell(git init *)"
+      "PowerShell(git init *)",
+      "PowerShell(git commit *)"
     ]
   }
 }

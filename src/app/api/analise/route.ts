@@ -107,7 +107,7 @@ export async function POST(request: NextRequest) {
       descricao ? `Descrição fornecida pelo comprador: ${descricao}` : "",
       volumeLabel ? `Volume de produção: ${volumeLabel}` : "",
       mimeType === "application/pdf"
-        ? "O desenho técnico da peça está no documento PDF anexado. Analise as cotas, geometria e especificações presentes no desenho."
+        ? "O desenho técnico da peça está no documento PDF anexado. Identifique TODAS as cotas de comprimento presentes, some as seções parciais para obter o comprimento total real da peça, descreva cada seção com seu valor individual e o total somado. Analise geometria, tolerâncias e especificações."
         : "",
       !imagemBase64 && !descricao
         ? "Analise com base apenas no título fornecido."
