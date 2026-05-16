@@ -151,8 +151,8 @@ export default async function ResultadoPage({ params }: { params: Promise<{ id: 
         <Card>
           <CardContent className="flex flex-col items-center py-12 gap-4">
             <div className="w-12 h-12 rounded-full border-2 border-accent border-t-transparent animate-spin" />
-            <p className="text-text-secondary text-sm">Analisando peça com IA...</p>
-            <p className="text-text-secondary text-xs">Recarregue a página em alguns instantes.</p>
+            <p className="text-text-secondary text-sm">Análise em andamento</p>
+            <p className="text-text-secondary text-xs">A página será atualizada automaticamente.</p>
           </CardContent>
         </Card>
       )}

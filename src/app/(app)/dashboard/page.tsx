@@ -121,7 +121,7 @@ export default async function DashboardPage() {
               </svg>
             </div>
             <div>
-              <p className="text-text-secondary text-xs">Em processamento</p>
+              <p className="text-text-secondary text-xs">Processando</p>
               <p className="font-syne font-bold text-2xl text-text-primary">{processando ?? 0}</p>
             </div>
           </CardContent>

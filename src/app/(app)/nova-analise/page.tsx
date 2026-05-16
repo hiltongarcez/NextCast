@@ -317,7 +317,7 @@ export default function NovaAnalisePage() {
         )}
 
         <Button type="submit" loading={loading} size="lg">
-          {loading ? "Analisando com IA..." : "Enviar para análise"}
+          {loading ? "Analisando..." : "Enviar para análise"}
         </Button>
       </form>
     </div>
