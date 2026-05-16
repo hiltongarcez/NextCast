@@ -39,6 +39,7 @@ export interface Analise {
   resultado_ia?: ResultadoIA;
   erro_mensagem?: string;
   cotacao_solicitada?: boolean;
+  material_informado?: string;
   created_at: string;
   updated_at?: string;
   comprador?: Comprador;
@@ -54,6 +55,8 @@ export interface ResultadoIA {
   complexidade: "simples" | "moderada" | "complexa";
   volume_recomendado: string;
   material_sugerido?: string;
+  material_divergencia?: string;
+  consideracao_material?: string;
   observacoes?: string;
 }
 

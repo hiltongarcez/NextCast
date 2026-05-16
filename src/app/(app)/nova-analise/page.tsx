@@ -16,6 +16,7 @@ export default function NovaAnalisePage() {
 
   const [titulo, setTitulo] = useState("");
   const [descricao, setDescricao] = useState("");
+  const [material, setMaterial] = useState("");
   const [volumeTipo, setVolumeTipo] = useState<"mensal" | "eventual" | "">("");
   const [volumeQtd, setVolumeQtd] = useState("");
   const [file, setFile] = useState<File | null>(null);
@@ -104,6 +105,7 @@ export default function NovaAnalisePage() {
       formData.append("analise_id", analise.id);
       formData.append("titulo", titulo.trim());
       formData.append("descricao", descricao.trim());
+      formData.append("material", material.trim());
       formData.append("volume_tipo", volumeTipo);
       formData.append("volume_qtd", volumeQtd);
       if (file) formData.append("arquivo", file);
@@ -147,6 +149,12 @@ export default function NovaAnalisePage() {
               onChange={(e) => setTitulo(e.target.value)}
               required
             />
+            <Input
+              label="Material (opcional)"
+              placeholder="Ex: Aço inox 316, Alumínio 6061, Aço SAE 1045..."
+              value={material}
+              onChange={(e) => setMaterial(e.target.value)}
+            />
             <div className="flex flex-col gap-1.5">
               <label className="text-sm font-medium text-text-secondary">
                 Descrição (opcional)
@@ -154,7 +162,7 @@ export default function NovaAnalisePage() {
               <textarea
                 className="w-full px-3.5 py-2.5 rounded-lg text-sm font-sans bg-surface-2 border border-border text-text-primary placeholder-muted transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent/60 resize-none"
                 rows={3}
-                placeholder="Descreva material, dimensões, tolerâncias, volume de produção ou qualquer detalhe relevante..."
+                placeholder="Descreva dimensões, tolerâncias ou qualquer detalhe relevante..."
                 value={descricao}
                 onChange={(e) => setDescricao(e.target.value)}
               />

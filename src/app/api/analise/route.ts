@@ -21,6 +21,7 @@ export async function POST(request: NextRequest) {
     analiseId = formData.get("analise_id") as string;
     const descricao = (formData.get("descricao") as string) ?? "";
     const titulo = (formData.get("titulo") as string) ?? "";
+    const material = (formData.get("material") as string) ?? "";
     const volumeTipo = (formData.get("volume_tipo") as string) ?? "";
     const volumeQtd = (formData.get("volume_qtd") as string) ?? "";
     const arquivo = formData.get("arquivo") as File | null;
@@ -104,13 +105,14 @@ export async function POST(request: NextRequest) {
 
     const promptParts = [
       titulo ? `Título da peça: ${titulo}` : "",
+      material ? `Material informado pelo usuário: ${material}` : "Material não informado pelo usuário — tente identificar no desenho.",
       descricao ? `Descrição fornecida pelo comprador: ${descricao}` : "",
       volumeLabel ? `Volume de produção: ${volumeLabel}` : "",
       mimeType === "application/pdf"
-        ? "O desenho técnico da peça está no documento PDF anexado. Identifique TODAS as cotas de comprimento presentes, some as seções parciais para obter o comprimento total real da peça, descreva cada seção com seu valor individual e o total somado. Analise geometria, tolerâncias e especificações."
+        ? "O desenho técnico da peça está no documento PDF anexado. Identifique TODAS as cotas de comprimento presentes, some as seções parciais para obter o comprimento total real da peça, descreva cada seção com seu valor individual e o total somado. Analise geometria, tolerâncias, especificações e material indicado no carimbo ou notas."
         : "",
       !imagemBase64 && !descricao
-        ? "Analise com base apenas no título fornecido."
+        ? "Analise com base apenas no título e material fornecidos."
         : "",
     ]
       .filter(Boolean)
@@ -126,6 +128,7 @@ export async function POST(request: NextRequest) {
         processos_alternativos: resultado.processos_alternativos,
         resultado_ia: resultado,
         arquivo_url: arquivoUrl ?? null,
+        material_informado: material || null,
         updated_at: new Date().toISOString(),
       })
       .eq("id", analiseId);

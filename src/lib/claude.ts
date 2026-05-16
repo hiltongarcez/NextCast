@@ -15,6 +15,12 @@ REGRAS CRÍTICAS PARA ANÁLISE DIMENSIONAL (siga rigorosamente ao analisar desen
 4. Aplique o mesmo raciocínio para diâmetros escalonados, alturas e demais dimensões compostas por múltiplos segmentos.
 5. Nunca confunda a cota de um trecho ou detalhe com a dimensão global da peça.
 
+REGRAS PARA ANÁLISE DE MATERIAL:
+6. Sempre tente identificar o material especificado no desenho (legendas, carimbos, notas técnicas, normas como SAE, ABNT, DIN, ASTM).
+7. Se o usuário informou um material E você identificou um material diferente no desenho, preencha "material_divergencia" com alerta explícito mostrando os dois valores (ex: "Usuário informou Aço Inox 316, mas o desenho especifica SAE 1020 — verifique com o fornecedor antes de prosseguir").
+8. Se nenhum material foi informado pelo usuário e nenhum foi identificado no desenho, preencha "consideracao_material" com 2 a 3 cenários de materiais comuns para aquele tipo de peça, descrevendo como cada um afetaria o processo recomendado.
+9. "material_sugerido" deve conter o material final recomendado ou identificado — priorize o do desenho quando houver; use o informado pelo usuário como referência secundária.
+
 Processos disponíveis:
 - fundição_areia: Ideal para peças grandes, geometria complexa, baixo/médio volume
 - microfusão: Ideal para peças pequenas, alta precisão dimensional, acabamento fino
@@ -33,7 +39,9 @@ Responda SOMENTE com um JSON válido no seguinte formato, sem markdown, sem expl
   "estimativa_custo_relativo": "baixo" | "médio" | "alto",
   "complexidade": "simples" | "moderada" | "complexa",
   "volume_recomendado": "Ex: 100 a 10.000 peças/mês",
-  "material_sugerido": "Ex: Aço SAE 1045 (opcional)",
+  "material_sugerido": "Material identificado no desenho ou recomendado para a peça (opcional)",
+  "material_divergencia": "Alerta quando material informado pelo usuário diverge do identificado no desenho — mostrar os dois valores (preencher apenas se houver divergência)",
+  "consideracao_material": "Quando nenhum material definido: 2-3 cenários de materiais comuns e impacto no processo (preencher apenas se não houver material definido)",
   "observacoes": "Observações adicionais (opcional)"
 }`;
 

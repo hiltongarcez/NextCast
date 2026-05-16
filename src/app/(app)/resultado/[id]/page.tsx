@@ -102,7 +102,7 @@ export default async function ResultadoPage({ params }: { params: Promise<{ id: 
       <div className="flex items-start justify-between mb-6 gap-4">
         <div>
           <h1 className="font-syne font-bold text-2xl text-text-primary">{a.titulo}</h1>
-          <div className="flex items-center gap-3 mt-2">
+          <div className="flex items-center gap-3 mt-2 flex-wrap">
             <StatusBadge status={a.status} />
             <span className="text-xs text-text-secondary font-mono">
               {new Date(a.created_at).toLocaleDateString("pt-BR", {
@@ -113,6 +113,14 @@ export default async function ResultadoPage({ params }: { params: Promise<{ id: 
                 minute: "2-digit",
               })}
             </span>
+            {a.material_informado && (
+              <span className="inline-flex items-center gap-1.5 text-xs text-text-secondary">
+                <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" />
+                </svg>
+                {a.material_informado}
+              </span>
+            )}
           </div>
         </div>
 
@@ -213,6 +221,18 @@ export default async function ResultadoPage({ params }: { params: Promise<{ id: 
             </Card>
           </div>
 
+          {resultado.material_divergencia && (
+            <div className="flex gap-3 p-4 rounded-xl border border-yellow-400/30 bg-yellow-400/5">
+              <svg className="w-5 h-5 text-yellow-400 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+              </svg>
+              <div>
+                <p className="text-sm font-medium text-yellow-400 mb-1">Divergência de material detectada</p>
+                <p className="text-sm text-text-secondary leading-relaxed">{resultado.material_divergencia}</p>
+              </div>
+            </div>
+          )}
+
           {resultado.caracteristicas_identificadas?.length > 0 && (
             <Card>
               <CardHeader>
@@ -267,6 +287,17 @@ export default async function ResultadoPage({ params }: { params: Promise<{ id: 
               </CardHeader>
               <CardContent>
                 <p className="text-sm text-text-secondary leading-relaxed">{resultado.observacoes}</p>
+              </CardContent>
+            </Card>
+          )}
+
+          {resultado.consideracao_material && (
+            <Card>
+              <CardHeader>
+                <h3 className="font-syne font-semibold text-sm text-text-primary">Consideração sobre material</h3>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-text-secondary leading-relaxed">{resultado.consideracao_material}</p>
               </CardContent>
             </Card>
           )}
