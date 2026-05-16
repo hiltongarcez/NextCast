@@ -77,7 +77,7 @@ describe("analisarPeca", () => {
     expect(content[0].type).toBe("text");
   });
 
-  it("usa o modelo claude-sonnet-4-20250514", async () => {
+  it("usa o modelo claude-opus-4-7", async () => {
     mockCreate.mockResolvedValue({
       content: [{ type: "text", text: JSON.stringify(resultadoMock) }],
     });
@@ -85,7 +85,7 @@ describe("analisarPeca", () => {
     await analisarPeca("Peça");
 
     const callArgs = mockCreate.mock.calls[0][0];
-    expect(callArgs.model).toBe("claude-sonnet-4-6");
+    expect(callArgs.model).toBe("claude-opus-4-7");
   });
 
   it("envia PDF como document block quando mimeType é application/pdf", async () => {
