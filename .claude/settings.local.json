@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(Get-ChildItem \"D:\\\\Sistema NextCast REPRESENTAÇÃO\" -Recurse -Depth 3 -Exclude \"node_modules\" | Select-Object FullName, @{Name=\"Type\"; Expression={if \\($_.PSIsContainer\\) {\"DIR\"} else {\"FILE\"}}} | Format-Table -AutoSize)",
+      "PowerShell(Get-ChildItem *)",
+      "PowerShell(Get-ChildItem \"D:\\\\Sistema NextCast REPRESENTAÇÃO\" -Depth 0 | Where-Object {$_.Name -match '\\\\.md$'})",
+      "PowerShell(winget *)",
+      "PowerShell(git *)",
+      "PowerShell(git init *)"
+    ]
+  }
+}
