@@ -74,7 +74,7 @@ export async function analisarPeca(
 
   const message = await client.messages.create({
     model: "claude-sonnet-4-6",
-    max_tokens: 1024,
+    max_tokens: 4096,
     system: SYSTEM_PROMPT,
     messages: [{ role: "user", content }],
   });
@@ -87,8 +87,12 @@ export async function analisarPeca(
   const raw = textBlock.text.trim();
   const jsonStart = raw.indexOf("{");
   const jsonEnd = raw.lastIndexOf("}");
-  const jsonStr = raw.slice(jsonStart, jsonEnd + 1);
 
+  if (jsonStart === -1 || jsonEnd === -1 || jsonEnd < jsonStart) {
+    throw new Error("A IA não retornou um JSON válido. Tente novamente.");
+  }
+
+  const jsonStr = raw.slice(jsonStart, jsonEnd + 1);
   const resultado = JSON.parse(jsonStr) as ResultadoIA;
   return resultado;
 }
