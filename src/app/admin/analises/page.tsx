@@ -30,23 +30,25 @@ export default async function AdminAnalisesPage({
   const from = (pagina - 1) * PAGE_SIZE;
   const to = from + PAGE_SIZE - 1;
 
-  function buildQuery(forCount = false) {
-    let q = supabase
-      .from("analises")
-      .select(
-        forCount ? "*" : "id, titulo, status, processo_recomendado, cotacao_solicitada, created_at, comprador:compradores(nome, empresa)",
-        forCount ? { count: "exact", head: true } : undefined
-      );
-
-    if (filtro === "cotacao") q = (q as any).eq("cotacao_solicitada", true);
-    else if (filtro !== "todos") q = (q as any).eq("status", filtro);
-
+  function aplicarFiltro<T extends ReturnType<typeof supabase.from>>(q: any): any {
+    if (filtro === "cotacao") return q.eq("cotacao_solicitada", true);
+    if (filtro !== "todos") return q.eq("status", filtro);
     return q;
   }
 
+  const listaQuery = aplicarFiltro(
+    supabase
+      .from("analises")
+      .select("id, titulo, status, processo_recomendado, cotacao_solicitada, created_at, comprador:compradores(nome, empresa)")
+  ).order("created_at", { ascending: false }).range(from, to);
+
+  const countQuery = aplicarFiltro(
+    supabase.from("analises").select("*", { count: "exact", head: true })
+  );
+
   const [{ data: analises }, { count: total }] = await Promise.all([
-    buildQuery().order("created_at", { ascending: false }).range(from, to),
-    buildQuery(true),
+    listaQuery,
+    countQuery,
   ]);
 
   const totalPaginas = Math.ceil((total ?? 0) / PAGE_SIZE);

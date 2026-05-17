@@ -19,6 +19,10 @@ const resultadoMock = {
   estimativa_custo_relativo: "médio",
   complexidade: "moderada",
   volume_recomendado: "1 a 500 peças/mês",
+  material_sugerido: "Aço SAE 1045",
+  material_divergencia: undefined,
+  consideracao_material: undefined,
+  observacoes: undefined,
 };
 
 describe("analisarPeca", () => {
@@ -108,5 +112,28 @@ describe("analisarPeca", () => {
     });
 
     await expect(analisarPeca("Peça")).rejects.toThrow("Resposta inesperada da IA");
+  });
+
+  it("lança erro quando resposta não contém JSON válido", async () => {
+    mockCreate.mockResolvedValue({
+      content: [{ type: "text", text: "Desculpe, não consigo analisar esta imagem." }],
+    });
+
+    await expect(analisarPeca("Peça")).rejects.toThrow("A IA não retornou um JSON válido. Tente novamente.");
+  });
+
+  it("retorna campos opcionais de material quando presentes", async () => {
+    const mockComMaterial = {
+      ...resultadoMock,
+      material_divergencia: "Usuário informou Inox 316, desenho especifica SAE 1020",
+      consideracao_material: undefined,
+    };
+    mockCreate.mockResolvedValue({
+      content: [{ type: "text", text: JSON.stringify(mockComMaterial) }],
+    });
+
+    const resultado = await analisarPeca("Peça com divergência de material");
+    expect(resultado.material_divergencia).toBe("Usuário informou Inox 316, desenho especifica SAE 1020");
+    expect(resultado.material_sugerido).toBe("Aço SAE 1045");
   });
 });
