@@ -10,7 +10,8 @@
       "PowerShell(git commit *)",
       "PowerShell(Start-Process \"http://localhost:3001\")",
       "PowerShell(npm run *)",
-      "PowerShell(Start-Process \"http://localhost:3002\")"
+      "PowerShell(Start-Process \"http://localhost:3002\")",
+      "PowerShell(Start-Process \"http://localhost:3003\")"
     ]
   }
 }

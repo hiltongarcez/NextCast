@@ -251,7 +251,7 @@ export default function NovaAnalisePage() {
               <input
                 ref={fileInputRef}
                 type="file"
-                accept={ACCEPTED.join(",")}
+                accept=".pdf,.jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp,application/pdf"
                 className="hidden"
                 onChange={(e) => {
                   const f = e.target.files?.[0];
