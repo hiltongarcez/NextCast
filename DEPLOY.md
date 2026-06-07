@@ -117,7 +117,7 @@ create policy "usuário atualiza seu próprio perfil" on public.compradores
 ### 1.3 Criar o bucket de storage
 
 1. Supabase → **Storage** → **New bucket**
-2. Nome: `analises`
+2. Nome: `arquivos`
 3. Marque **Public bucket** → Create
 
 Adicione a policy de upload:
@@ -125,11 +125,11 @@ Adicione a policy de upload:
 ```sql
 create policy "usuários autenticados fazem upload"
   on storage.objects for insert
-  with check (bucket_id = 'analises' and auth.role() = 'authenticated');
+  with check (bucket_id = 'arquivos' and auth.role() = 'authenticated');
 
 create policy "usuários autenticados leem seus arquivos"
   on storage.objects for select
-  using (bucket_id = 'analises' and auth.role() = 'authenticated');
+  using (bucket_id = 'arquivos' and auth.role() = 'authenticated');
 ```
 
 ### 1.4 Configurar Auth
@@ -153,8 +153,9 @@ cp .env.local.example .env.local
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase → Settings → API → anon/public |
 | `SUPABASE_SERVICE_ROLE_KEY` | Supabase → Settings → API → service_role (secret) |
 | `ANTHROPIC_API_KEY` | console.anthropic.com → API Keys |
-| `WHATSAPP_ADMIN_NUMBER` | Número do admin no formato `5511999999999` |
-| `RESEND_API_KEY` | resend.com → API Keys |
+| `WHATSAPP_ADMIN_NUMBER` | Número do admin no formato `5511999999999` (opcional) |
+| `ADMIN_EMAIL` | E-mail do admin para alertas de novas análises (opcional) |
+| `RESEND_API_KEY` | resend.com → API Keys (opcional) |
 | `RESEND_FROM` | Ex: `NextCast <noreply@seudominio.com.br>` (domínio verificado no Resend) |
 | `NEXT_PUBLIC_APP_URL` | `http://localhost:3000` (local) ou URL do Vercel |
 
@@ -198,6 +199,7 @@ Settings → **Environment Variables** — adicione todas as variáveis do `.env
 - `NEXT_PUBLIC_APP_URL` → `https://nextcast.vercel.app` (ou seu domínio)
 - `RESEND_API_KEY`
 - `RESEND_FROM` → `NextCast <noreply@seudominio.com.br>`
+- `ADMIN_EMAIL` → e-mail para alertas de novas análises
 
 ### 4.3 Deploy
 
@@ -273,7 +275,7 @@ npm run build   # reproduza localmente primeiro
 Verifique se `ANTHROPIC_API_KEY` está configurada no Vercel (não é `NEXT_PUBLIC_`).
 
 **Arquivo não faz upload**
-Confirme que o bucket `analises` existe e as policies de storage foram criadas.
+Confirme que o bucket `arquivos` existe e as policies de storage foram criadas.
 
 **Usuário redireciona para /login em loop**
 Verifique se o `NEXT_PUBLIC_SUPABASE_URL` e `NEXT_PUBLIC_SUPABASE_ANON_KEY` estão corretos.
