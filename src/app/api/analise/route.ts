@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { analisarPeca } from "@/lib/claude";
-import { enviarEmailAnalise } from "@/lib/email";
+import { enviarEmailAnalise, enviarEmailAlertaAdmin } from "@/lib/email";
+import { gerarLinkAlertaAdmin } from "@/lib/whatsapp";
 
 const MIME_IMAGEM = new Set(["image/jpeg", "image/png", "image/webp", "image/gif"]);
 const RATE_LIMIT_POR_HORA = 10;
@@ -30,7 +31,6 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "analise_id obrigatório" }, { status: 400 });
     }
 
-    // Verifica que a análise pertence ao usuário
     const { data: analise } = await supabase
       .from("analises")
       .select("id, comprador_id")
@@ -41,7 +41,6 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Análise não encontrada" }, { status: 404 });
     }
 
-    // Rate limiting: máximo RATE_LIMIT_POR_HORA análises por hora por usuário
     const umaHoraAtras = new Date(Date.now() - 60 * 60 * 1000).toISOString();
     const { count: recentes } = await supabase
       .from("analises")
@@ -135,24 +134,33 @@ export async function POST(request: NextRequest) {
 
     if (updateError) throw new Error(updateError.message);
 
-    // Fire-and-forget: notifica o comprador por e-mail
-    if (user.email) {
-      void (async () => {
-        try {
-          const { data: perfil } = await supabase
-            .from("compradores").select("nome").eq("id", user.id).single();
+    // Fire-and-forget: notifica o comprador e o admin por e-mail
+    void (async () => {
+      try {
+        const { data: perfil } = await supabase
+          .from("compradores").select("nome, empresa").eq("id", user.id).single();
+
+        if (user.email) {
           await enviarEmailAnalise({
-            para: user.email!,
+            para: user.email,
             nome: perfil?.nome ?? "Comprador",
             titulo,
             analiseId: analiseId!,
             resultado,
-          });
-        } catch {
-          // ignorar falha de e-mail
+          }).catch(() => {});
         }
-      })();
-    }
+
+        await enviarEmailAlertaAdmin({
+          titulo,
+          analiseId: analiseId!,
+          compradorNome: perfil?.nome ?? "Comprador",
+          compradorEmpresa: perfil?.empresa ?? undefined,
+          whatsappLink: gerarLinkAlertaAdmin({ id: analiseId!, titulo }),
+        }).catch(() => {});
+      } catch {
+        // ignorar falha de e-mail
+      }
+    })();
 
     return NextResponse.json({ success: true, resultado });
 

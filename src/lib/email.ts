@@ -122,6 +122,71 @@ export async function enviarEmailAnalise({
   });
 }
 
+export async function enviarEmailAlertaAdmin({
+  titulo,
+  analiseId,
+  compradorNome,
+  compradorEmpresa,
+  whatsappLink,
+}: {
+  titulo: string;
+  analiseId: string;
+  compradorNome: string;
+  compradorEmpresa?: string;
+  whatsappLink: string | null;
+}) {
+  const adminEmail = process.env.ADMIN_EMAIL;
+  if (!process.env.RESEND_API_KEY || !adminEmail) return;
+  const resend = new Resend(process.env.RESEND_API_KEY);
+
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://nextcast.vercel.app";
+  const urlAnalise = `${appUrl}/resultado/${analiseId}`;
+  const urlAdmin = `${appUrl}/admin/analises`;
+
+  const html = wrapLayout(`
+    <tr>
+      <td style="background-color:#ffffff;padding:32px">
+        <h2 style="margin:0 0 8px;color:#111827;font-size:22px;font-weight:bold">Nova análise concluída</h2>
+        <p style="color:#6b7280;margin:0 0 24px;font-size:14px">
+          Uma nova análise foi processada e está aguardando revisão.
+        </p>
+
+        <table width="100%" cellpadding="0" cellspacing="0" style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;margin-bottom:24px">
+          <tr>
+            <td style="padding:20px">
+              <p style="margin:0 0 10px;font-size:13px;color:#374151">
+                <strong style="display:inline-block;width:72px;color:#6b7280">Peça:</strong>
+                <span style="color:#111827">${titulo}</span>
+              </p>
+              <p style="margin:0 0 10px;font-size:13px;color:#374151">
+                <strong style="display:inline-block;width:72px;color:#6b7280">Comprador:</strong>
+                <span style="color:#111827">${compradorNome}${compradorEmpresa ? ` · ${compradorEmpresa}` : ""}</span>
+              </p>
+            </td>
+          </tr>
+        </table>
+
+        <div style="display:flex;gap:12px;margin-bottom:0">
+          <a href="${urlAnalise}" style="display:inline-block;background-color:#00c2ff;color:#0a0c10;padding:12px 20px;border-radius:6px;text-decoration:none;font-size:14px;font-weight:bold;margin-right:12px">
+            Ver resultado →
+          </a>
+          <a href="${urlAdmin}" style="display:inline-block;background-color:#f0f9ff;color:#0369a1;padding:12px 20px;border-radius:6px;text-decoration:none;font-size:14px;font-weight:bold;border:1px solid #bae6fd;margin-right:12px">
+            Painel admin →
+          </a>
+          ${whatsappLink ? `<a href="${whatsappLink}" style="display:inline-block;background-color:#dcfce7;color:#166534;padding:12px 20px;border-radius:6px;text-decoration:none;font-size:14px;font-weight:bold;border:1px solid #86efac">WhatsApp →</a>` : ""}
+        </div>
+      </td>
+    </tr>
+  `);
+
+  return resend.emails.send({
+    from: FROM,
+    to: adminEmail,
+    subject: `Nova análise: ${titulo} — NextCast`,
+    html,
+  });
+}
+
 export async function enviarEmailBoasVindas({
   para,
   nome,

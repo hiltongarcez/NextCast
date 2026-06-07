@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import Link from "next/link";
 import { Card, CardContent, CardHeader } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
@@ -201,6 +202,9 @@ export default function CompradoresPage() {
                   <Badge variant={c.ativo ? "success" : "default"}>
                     {c.ativo ? "Ativo" : "Inativo"}
                   </Badge>
+                  <Link href={`/admin/compradores/${c.id}`}>
+                    <Button variant="ghost" size="sm">Ver detalhes</Button>
+                  </Link>
                   <Button
                     variant="ghost"
                     size="sm"
